@@ -8,7 +8,7 @@ import requests
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from core.scraper import buscar_municipio_por_nomenclator
-from db.etl import insertar_resultado
+from db.carga import insertar_resultado
 
 logging.basicConfig(
     level=logging.INFO,
