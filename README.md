@@ -1,3 +1,8 @@
 # ramirez_prueba_utl_2026
-## Instalación del proyecto
-## Docuementacion API registraduria
+## Candidato
+## Instalación
+## Pipeline de ejecución
+## API
+## Municipios en la BD
+## Hallazgos principales
+## Bonus implementados
