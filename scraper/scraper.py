@@ -7,7 +7,7 @@ import requests
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from core.scraper import buscar_municipio_por_nomenclator
+from core.scraper import buscar_municipio_por_nomenclator, obtener_mesas_por_municipio
 from db.carga import insertar_resultado
 
 logging.basicConfig(
@@ -23,75 +23,59 @@ CODIGO_API_CORPORACION = {"SENADO": "SE", "CAMARA": "CA"}
 
 def obtener_resultado_municipio(municipios):
     nombres = {m.upper().strip() for m in municipios}
-    resultados = {}
     saltados = 0
     logger.info("Iniciando scraper para %d municipio(s)", len(nombres))
 
-    for corporacion in CORPORACIONES:
-        logger.info("Procesando corporacion: %s", corporacion)
-        for nombre in nombres:
-            meta = buscar_municipio_por_nomenclator(nombre)
-            if not meta:
-                logger.warning("Municipio '%s' no encontrado en nomenclator", nombre)
-                continue
+    for nombre in nombres:
+        meta = buscar_municipio_por_nomenclator(nombre)
+        if not meta:
+            logger.warning("Municipio '%s' no encontrado en nomenclator", nombre)
+            continue
 
+        mesas = obtener_mesas_por_municipio(nombre)
+        logger.info("Municipio '%s' tiene %d mesas", nombre, len(mesas))
+
+        for corporacion in CORPORACIONES:
             cod_corporacion = CODIGO_API_CORPORACION[corporacion]
-            url = f"{API_REGISTRADURIA_BASE_URL}/json/ACT/{cod_corporacion}/{meta['codigo']}.json"
-            logger.info("Consultando %s - %s: %s", corporacion, nombre, url)
+            logger.info("Procesando corporacion: %s para %s", corporacion, nombre)
 
-            try:
-                resp = requests.get(url, timeout=10)
-                if resp.status_code != 200:
-                    logger.warning("HTTP %d para %s - %s", resp.status_code, corporacion, nombre)
-                    continue
-                data = resp.json()
-                logger.info("Respuesta OK para %s - %s", corporacion, nombre)
-            except requests.RequestException as e:
-                logger.error("Error de conexion para %s - %s: %s", corporacion, nombre, e)
-                continue
-            except ValueError as e:
-                logger.error("Error decodificando JSON para %s - %s: %s", corporacion, nombre, e)
-                continue
+            for mesa_info in mesas:
+                url = f"{API_REGISTRADURIA_BASE_URL}/json/ACT/{cod_corporacion}/{mesa_info['codigo_mesa']}.json"
+                logger.info("Consultando %s - %s - mesa %d: %s", corporacion, nombre, mesa_info["mesa"], url)
 
-            for cam in data.get("camaras", []):
-                for mun in cam.get("mapagan", []):
-                    nombre_resp = (mun.get("nombre") or "").upper().strip()
-                    if nombre_resp != nombre:
+                try:
+                    resp = requests.get(url, timeout=10)
+                    if resp.status_code != 200:
+                        logger.warning("HTTP %d para mesa %s", resp.status_code, mesa_info["codigo_mesa"])
                         continue
+                    data = resp.json()
+                except requests.RequestException as e:
+                    logger.error("Error de conexion mesa %s: %s", mesa_info["codigo_mesa"], e)
+                    continue
+                except ValueError as e:
+                    logger.error("Error decodificando JSON mesa %s: %s", mesa_info["codigo_mesa"], e)
+                    continue
 
-                    amb = mun.get("amb", "")
-                    if nombre not in resultados:
-                        resultados[nombre] = {"_meta": meta}
-
-                    if corporacion not in resultados[nombre]:
-                        resultados[nombre][corporacion] = []
-
-                    partidos = []
+                for cam in data.get("camaras", []):
                     for partido in cam.get("partotabla", []):
                         act = partido.get("act", {})
                         cantotabla = act.get("cantotabla", [])
-
                         nombre_partido = act.get("nompar", str(act.get("codpar", "")))
                         codigo_partido = act.get("codpar", "")
 
-                        candidatos = []
                         for c in cantotabla:
                             nombre_completo = f"{c.get('nomcan', '')} {c.get('apecan', '')}".strip()
-                            candidato_data = {
-                                "codigo": c.get("codcan"),
-                                "nombre_completo": nombre_completo,
-                                "cedula": c.get("cedula"),
-                                "votos": c.get("vot"),
-                                "porcentaje": c.get("pvot"),
-                                "voto_preferente": c.get("pref"),
-                            }
-                            candidatos.append(candidato_data)
-
                             votos = int(c.get("vot", 0) or 0)
                             if not insertar_resultado(
                                 corporacion=cod_corporacion,
                                 municipio=nombre,
                                 codigo_dane=meta["codigo"],
+                                zona=mesa_info["zona"],
+                                codigo_zona=mesa_info["codigo_zona"],
+                                puesto=mesa_info["puesto"],
+                                codigo_puesto=mesa_info["codigo_puesto"],
+                                mesa=mesa_info["mesa"],
+                                codigo_mesa=mesa_info["codigo_mesa"],
                                 partido=nombre_partido,
                                 codigo_partido=codigo_partido,
                                 candidato=nombre_completo,
@@ -100,39 +84,11 @@ def obtener_resultado_municipio(municipios):
                             ):
                                 saltados += 1
 
-                        partidos.append({
-                            "codigo_partido": codigo_partido,
-                            "votos_partido": act.get("vot"),
-                            "porcentaje_partido": act.get("pvot"),
-                            "candidatos": candidatos,
-                        })
-
-                    resultados[nombre][corporacion].append({
-                        "codigo": amb,
-                        "nombre": mun.get("nombre"),
-                        "camara": cam.get("cam"),
-                        "totales_municipio": {
-                            "votantes": mun.get("votant"),
-                            "porcentaje_votacion": mun.get("pvotant"),
-                            "votos_candidatos": mun.get("votcan"),
-                            "mesas_escrutadas": mun.get("mesesc"),
-                            "porcentaje_mesas": mun.get("pmesesc"),
-                        },
-                        "partido_ganador": {
-                            "codigo": mun.get("codpar"),
-                            "votos": mun.get("vot"),
-                            "porcentaje": mun.get("pvot"),
-                        },
-                        "partidos": partidos,
-                    })
-
-    logger.info("Scraper finalizado. %d municipio(s) procesado(s)", len(resultados))
-    logger.info("Total registros saltados (duplicados): %d", saltados)
-    return resultados
+    logger.info("Scraper finalizado. Total registros saltados (duplicados): %d", saltados)
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Scraper de resultados electorales")
+    parser = argparse.ArgumentParser(description="Scraper de resultados electorales por mesa")
     parser.add_argument(
         "--municipios", "-m",
         nargs="+",
@@ -140,5 +96,4 @@ if __name__ == "__main__":
         help="Uno o más municipios a consultar (ej: --municipios Tunja Bogota Medellin)",
     )
     args = parser.parse_args()
-    resultados = obtener_resultado_municipio(args.municipios)
-    print(resultados)
+    obtener_resultado_municipio(args.municipios)

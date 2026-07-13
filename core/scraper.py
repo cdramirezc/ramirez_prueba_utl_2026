@@ -34,30 +34,24 @@ def _cargar_codigos_internos():
     data = _fetch_nomenclator()
     ambitos = data.get("amb", [])
     ambito = next((a for a in ambitos if a.get("elec") == 1), ambitos[0])
-    municipios = [e for e in data.get("elec", [])]
     deptos_map = {}
     for entry in ambito.get("ambitos", []):
         if entry.get("l") == 2:
             deptos_map[entry["i"]] = entry["n"]
 
     result = {}
-    for entry in data.get("elec", []):
-        sigla = entry.get("sigla")
-        for ambito in ambitos:
-            if ambito.get("elec") != entry.get("elec"):
-                continue
-            for a in ambito.get("ambitos", []):
-                if a.get("l") != 3:
-                    continue
-                nombre = a.get("n", "").upper().strip()
-                codigo = a.get("c", "")
-                padre = a.get("p", [{}])[0].get("p", [None])[0]
-                departamento = deptos_map.get(padre, "")
-                result[nombre] = {
-                    "codigo": codigo,
-                    "departamento": departamento,
-                    "nomenclator_idx": a.get("i"),
-                }
+    for entry in ambito.get("ambitos", []):
+        if entry.get("l") != 3:
+            continue
+        nombre = entry.get("n", "").upper().strip()
+        codigo = entry.get("c", "")
+        padre = entry.get("p", [{}])[0].get("p", [None])[0]
+        departamento = deptos_map.get(padre, "")
+        result[nombre] = {
+            "codigo": codigo,
+            "departamento": departamento,
+            "nomenclator_idx": entry.get("i"),
+        }
     return result
 
 
@@ -91,3 +85,43 @@ def buscar_municipio_por_nomenclator(nombre):
         if nombre in key or key in nombre:
             return val
     return None
+
+
+def obtener_mesas_por_municipio(nombre_municipio):
+    data = _fetch_nomenclator()
+    ambitos = data["amb"][0]["ambitos"]
+    idx_map = {e["i"]: e for e in ambitos}
+
+    mun = None
+    for e in ambitos:
+        if e.get("n", "").upper().strip() == nombre_municipio.upper().strip() and e.get("l") == 3:
+            mun = e
+            break
+    if not mun:
+        return []
+
+    mesas = []
+    for h in mun.get("h", []):
+        if h["l"] == 4:
+            for zi in h["p"]:
+                zona = idx_map.get(zi)
+                if not zona:
+                    continue
+                for h2 in zona.get("h", []):
+                    if h2["l"] == 6:
+                        for pi in h2["p"]:
+                            puesto = idx_map.get(pi)
+                            if not puesto:
+                                continue
+                            num_mesas = puesto.get("m", 0)
+                            for m in range(1, num_mesas + 1):
+                                codigo_mesa = puesto["c"] + str(m).zfill(6)
+                                mesas.append({
+                                    "zona": zona.get("n", ""),
+                                    "codigo_zona": zona.get("c", ""),
+                                    "puesto": puesto.get("n", ""),
+                                    "codigo_puesto": puesto.get("c", ""),
+                                    "mesa": m,
+                                    "codigo_mesa": codigo_mesa,
+                                })
+    return mesas
