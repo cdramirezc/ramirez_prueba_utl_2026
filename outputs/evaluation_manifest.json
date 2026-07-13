@@ -1,8 +1,8 @@
 {
   "meta": {
     "nombre": "CESAR RAMIREZ",
-    "email": "cesar.ramirez@ejemplo.com",
-    "url_repo": "https://github.com/cesar/ramirez_prueba_utl_2026",
+    "email": "cesar.rcely@gmail.com",
+    "url_repo": "https://github.com/cdramirezc/ramirez_prueba_utl_2026",
     "fecha": "2026-07-13"
   },
   "checks": [
@@ -12,9 +12,9 @@
       "detail": ""
     },
     {
-      "desc": "Municipios: 4/4",
+      "desc": "Municipios: 8/8 pares (municipio, corporacion) con filas >0",
       "ok": true,
-      "detail": "{'DUITAMA': 75166, 'PAIPA': 25683, 'SOGAMOSO': 77394, 'TUNJA': 180928}"
+      "detail": "{'DUITAMA|CA': 73626, 'DUITAMA|SE': 75166, 'PAIPA|CA': 24288, 'PAIPA|SE': 50291, 'SOGAMOSO|CA': 76031, 'SOGAMOSO|SE': 1363, 'TUNJA|CA': 39400, 'TUNJA|SE': 141528}"
     },
     {
       "desc": "Tabla partido: 83 registros",
@@ -27,17 +27,17 @@
       "detail": ""
     },
     {
-      "desc": "Tabla zona: 11 registros",
+      "desc": "Tabla zona: 15 registros",
       "ok": true,
       "detail": ""
     },
     {
-      "desc": "Tabla puesto: 38 registros",
+      "desc": "Tabla puesto: 55 registros",
       "ok": true,
       "detail": ""
     },
     {
-      "desc": "Tabla mesa: 604 registros",
+      "desc": "Tabla mesa: 817 registros",
       "ok": true,
       "detail": ""
     },
@@ -47,26 +47,66 @@
       "detail": ""
     },
     {
-      "desc": "Tabla resultados_votacion: 359166 registros",
+      "desc": "Tabla resultados_votacion: 481688 registros",
       "ok": true,
       "detail": ""
+    },
+    {
+      "desc": "Cobertura DUITAMA|CA: 279/287 mesas (97.2%)",
+      "ok": true,
+      "detail": "DUITAMA|CA: 279/287 = 97.2%"
+    },
+    {
+      "desc": "Cobertura DUITAMA|SE: 69/287 mesas (24.0%)",
+      "ok": false,
+      "detail": "DUITAMA|SE: 69/287 = 24.0%"
+    },
+    {
+      "desc": "Cobertura PAIPA|CA: 92/95 mesas (96.8%)",
+      "ok": true,
+      "detail": "PAIPA|CA: 92/95 = 96.8%"
+    },
+    {
+      "desc": "Cobertura PAIPA|SE: 49/95 mesas (51.6%)",
+      "ok": false,
+      "detail": "PAIPA|SE: 49/95 = 51.6%"
+    },
+    {
+      "desc": "Cobertura SOGAMOSO|CA: 288/301 mesas (95.7%)",
+      "ok": true,
+      "detail": "SOGAMOSO|CA: 288/301 = 95.7%"
+    },
+    {
+      "desc": "Cobertura SOGAMOSO|SE: 2/301 mesas (0.7%)",
+      "ok": false,
+      "detail": "SOGAMOSO|SE: 2/301 = 0.7%"
+    },
+    {
+      "desc": "Cobertura TUNJA|CA: 150/424 mesas (35.4%)",
+      "ok": false,
+      "detail": "TUNJA|CA: 150/424 = 35.4%"
+    },
+    {
+      "desc": "Cobertura TUNJA|SE: 130/424 mesas (30.7%)",
+      "ok": false,
+      "detail": "TUNJA|SE: 130/424 = 30.7%"
     }
   ],
   "sql": [
     {
       "name": "tarea_3_1 - Arrastre Verde",
       "status": "OK",
-      "rows": 38,
+      "rows": 55,
       "sample": [
-        "('DUITAMA', '0700079010002', 'ANTIGUO TERMINAL DE TRANSPORTE', 539, 0, None)",
-        "('DUITAMA', '0700079010003', 'COL SANTO T DE AQUINO SD PRIA 1', 371, 0, None)",
-        "('DUITAMA', '0700079010004', 'COL JESUS EUCARISTIA', 364, 0, None)"
+        "('DUITAMA', '0700079010001', 'COLEGIO SALESIANO', 0, 320, 0.0)",
+        "('DUITAMA', '0700079010002', 'ANTIGUO TERMINAL DE TRANSPORTE', 539, 439, 1.2278)",
+        "('DUITAMA', '0700079010003', 'COL SANTO T DE AQUINO SD PRIA 1', 371, 310, 1.1968)"
       ]
     },
     {
       "name": "tarea_3_2 - Concentracion >60%",
       "status": "OK",
-      "rows": 3181,
+      "rows": 4567,
       "sample": [
         "(1, '0700001010005000001', 1, 'AUDITORIO GUSTAVO M CASTELLANOS COMFABOY', 'ZONA01', 'TUNJA', 'BOYACA', 'Pacto Histórico', '92', 'SOLO POR LA LISTA', '0', 'Senado', 59, 59, 100.0)",
         "(1, '0700001010005000001', 1, 'AUDITORIO GUSTAVO M CASTELLANOS COMFABOY', 'ZONA01', 'TUNJA', 'BOYACA', 'Centro Democrático', '10', 'SOLO POR LA LISTA', '0', 'Senado', 39, 39, 100.0)",
@@ -78,15 +118,15 @@
       "status": "OK",
       "rows": 5,
       "sample": [
-        "('SOLO POR LA LISTA', 'Pacto Histórico', 9934.0)",
-        "('SOLO POR LA LISTA', 'Centro Democrático', 6109.0)",
-        "('JOHN EDICKSON AMAYA RODRIGUEZ', 'Alianza Verde', 2707.0)"
+        "('YAMIT NOE HURTADO NEIRA', 'Alianza Verde', 2950.26)",
+        "('JAIME RAUL SALAMANCA TORRES', 'Alianza Verde', 2299.51)",
+        "('RAMIRO BARRAGAN ADAME', 'Alianza Verde', 2066.6)"
       ]
     }
   ],
   "visualizations": {
     "scatter": {
-      "stdout": "r=0.846 | pendiente=0.874 | n_mesas=129",
+      "stdout": "r=0.872 | pendiente=0.884 | n_mesas=242",
       "stderr": "",
       "returncode": 0
     },

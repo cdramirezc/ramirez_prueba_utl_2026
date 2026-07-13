@@ -1,8 +1,8 @@
 {
   "meta": {
-    "nombre": "NOMBRE APELLIDO",
-    "email": "nombre@ejemplo.com",
-    "url_repo": "https://github.com/usuario/prueba_utl_2026",
+    "nombre": "CESAR RAMIREZ",
+    "email": "cesar.rcely@gmail.com",
+    "url_repo": "https://github.com/cdramirezc/ramirez_prueba_utl_2026",
     "fecha": "2026-07-13"
   },
   "checks": [
@@ -12,12 +12,22 @@
       "detail": ""
     },
     {
-      "desc": "Municipios: 4/4",
+      "desc": "Municipios: 8/8 pares (municipio, corporacion) con filas >0",
       "ok": true,
-      "detail": "{'DUITAMA': 13632, 'PAIPA': 25683, 'SOGAMOSO': 77394, 'TUNJA': 180928}"
+      "detail": "{'DUITAMA|CA': 73626, 'DUITAMA|SE': 75166, 'PAIPA|CA': 24288, 'PAIPA|SE': 50291, 'SOGAMOSO|CA': 76031, 'SOGAMOSO|SE': 1363, 'TUNJA|CA': 39400, 'TUNJA|SE': 141528}"
     },
     {
-      "desc": "Tabla resultados_votacion: ~297637 registros",
+      "desc": "Cobertura DUITAMA|CA: 279/287 mesas (97.2%)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "desc": "Cobertura DUITAMA|SE: 69/287 mesas (24.0%)",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "desc": "Tabla resultados_votacion: 481688 registros",
       "ok": true,
       "detail": ""
     }
@@ -26,9 +36,9 @@
     {
       "name": "tarea_3_1 - Arrastre Verde",
       "status": "OK",
-      "rows": 34,
+      "rows": 55,
       "sample": [
-        "('TUNJA', '0700001010001', 'AUDITORIO GUSTAVO M CASTELLANOS COMFABOY', 778, 3439, 0.2262)"
+        "('DUITAMA', '0700079010001', 'COLEGIO SALESIANO', 0, 320, 0.0)"
       ]
     },
     {
@@ -40,17 +50,17 @@
       ]
     },
     {
-      "name": "tarea_3_3 - Atribucion Deterministica",
+      "name": "tarea_3_3 - Atribucion Determinística",
       "status": "OK",
       "rows": 5,
       "sample": [
-        "('SOLO POR LA LISTA', '92', 6319.0)"
+        "('YAMIT NOE HURTADO NEIRA', 'Alianza Verde', 2287.64)"
       ]
     }
   ],
   "visualizations": {
     "scatter": {
-      "stdout": "r=0.846 | pendiente=0.874 | n_mesas=129",
+      "stdout": "r=0.872 | pendiente=0.884 | n_mesas=242",
       "stderr": "",
       "returncode": 0
     },

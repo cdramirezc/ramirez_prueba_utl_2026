@@ -79,12 +79,63 @@ tr:hover{background:var(--hover)}
 var DATA = {
   "total_municipios": {
     "DUITAMA": 12200,
-    "PAIPA": 282,
+    "PAIPA": 8442,
     "SOGAMOSO": 358,
     "TUNJA": 23381
   },
   "top10": {
-    "DUITAMA": [],
+    "DUITAMA": [
+      {
+        "nombre": "HECTOR DAVID CHAPARRO CHAPARRO",
+        "codpar": "2",
+        "votos": 4435
+      },
+      {
+        "nombre": "JAIME RAUL SALAMANCA TORRES",
+        "codpar": "5",
+        "votos": 2126
+      },
+      {
+        "nombre": "HERNEL DAVID ORTEGA GOMEZ",
+        "codpar": "121",
+        "votos": 1514
+      },
+      {
+        "nombre": "RAMIRO BARRAGAN ADAME",
+        "codpar": "5",
+        "votos": 1468
+      },
+      {
+        "nombre": "YAMIT NOE HURTADO NEIRA",
+        "codpar": "5",
+        "votos": 1274
+      },
+      {
+        "nombre": "INGRID MARLEN SOGAMOSO ALFONSO",
+        "codpar": "121",
+        "votos": 1113
+      },
+      {
+        "nombre": "NANCY YANETH ZAPATA PACHON",
+        "codpar": "120",
+        "votos": 1047
+      },
+      {
+        "nombre": "JICLY ESGARDO MUTIS ISAZA",
+        "codpar": "10",
+        "votos": 1018
+      },
+      {
+        "nombre": "EDUAR ALEXIS TRIANA RINCON",
+        "codpar": "10",
+        "votos": 900
+      },
+      {
+        "nombre": "JOSE DARIO MAHECHA CASTILLO",
+        "codpar": "121",
+        "votos": 892
+      }
+    ],
     "PAIPA": [
       {
         "nombre": "YAMIT NOE HURTADO NEIRA",
@@ -249,7 +300,7 @@ var DATA = {
     },
     "PAIPA": {
       "codpar": "57",
-      "votos": 87
+      "votos": 2169
     },
     "SOGAMOSO": {
       "codpar": "92",
@@ -295,10 +346,22 @@ var DATA = {
     ],
     "PAIPA": [
       {
+        "puesto": "COLISEO MUNICIPAL DE DEPORTES DE PAIPA",
+        "verde": 391,
+        "total": 1265,
+        "ratio": 0.3091
+      },
+      {
         "puesto": "I.E.EL ROSARIO SEDE CAMPESTRE",
-        "verde": 87,
-        "total": 282,
-        "ratio": 0.3085
+        "verde": 602,
+        "total": 2234,
+        "ratio": 0.2695
+      },
+      {
+        "puesto": "I.E.TOMAS VASQUEZ RODRIGUEZ",
+        "verde": 1176,
+        "total": 4943,
+        "ratio": 0.2379
       }
     ],
     "SOGAMOSO": [
@@ -355,7 +418,6 @@ var DATA = {
     ]
   }
 };
-
 var PARTY_COLORS = {57:"#007C34",92:"#7B2D8B",10:"#1E477D",2:"#E07B00"};
 function getPartyColor(c){return PARTY_COLORS[c]||"#888"}
 function getPartyName(c){var n={57:"Alianza Verde",92:"Pacto Histórico",10:"Centro Democrático",2:"Conservador",3:"Cambio Radical",17:"Dignidad & Compromiso",43:"Partido 43",44:"Partido 44",55:"Partido 55",9:"Partido 9",40:"Partido 40",39:"Partido 39",34:"Partido 34",33:"Partido 33",18:"Partido 18",11:"Centro Democrático",6:"ASI",170:"Partido 170",188:"Partido 188",234:"Partido 234",237:"Partido 237",252:"Partido 252",285:"Partido 285",300:"Frente por la Vida",306:"Partido 306",347:"Partido 347",5:"Alianza Verde CC",87:"Partido 87",120:"Partido 120",121:"Partido 121",122:"Partido 122"};return n[c]||"Partido "+c}

@@ -1,12 +1,63 @@
 {
   "total_municipios": {
     "DUITAMA": 12200,
-    "PAIPA": 282,
+    "PAIPA": 8442,
     "SOGAMOSO": 358,
     "TUNJA": 23381
   },
   "top10": {
-    "DUITAMA": [],
+    "DUITAMA": [
+      {
+        "nombre": "HECTOR DAVID CHAPARRO CHAPARRO",
+        "codpar": "2",
+        "votos": 4435
+      },
+      {
+        "nombre": "JAIME RAUL SALAMANCA TORRES",
+        "codpar": "5",
+        "votos": 2126
+      },
+      {
+        "nombre": "HERNEL DAVID ORTEGA GOMEZ",
+        "codpar": "121",
+        "votos": 1514
+      },
+      {
+        "nombre": "RAMIRO BARRAGAN ADAME",
+        "codpar": "5",
+        "votos": 1468
+      },
+      {
+        "nombre": "YAMIT NOE HURTADO NEIRA",
+        "codpar": "5",
+        "votos": 1274
+      },
+      {
+        "nombre": "INGRID MARLEN SOGAMOSO ALFONSO",
+        "codpar": "121",
+        "votos": 1113
+      },
+      {
+        "nombre": "NANCY YANETH ZAPATA PACHON",
+        "codpar": "120",
+        "votos": 1047
+      },
+      {
+        "nombre": "JICLY ESGARDO MUTIS ISAZA",
+        "codpar": "10",
+        "votos": 1018
+      },
+      {
+        "nombre": "EDUAR ALEXIS TRIANA RINCON",
+        "codpar": "10",
+        "votos": 900
+      },
+      {
+        "nombre": "JOSE DARIO MAHECHA CASTILLO",
+        "codpar": "121",
+        "votos": 892
+      }
+    ],
     "PAIPA": [
       {
         "nombre": "YAMIT NOE HURTADO NEIRA",
@@ -171,7 +222,7 @@
     },
     "PAIPA": {
       "codpar": "57",
-      "votos": 87
+      "votos": 2169
     },
     "SOGAMOSO": {
       "codpar": "92",
@@ -217,10 +268,22 @@
     ],
     "PAIPA": [
       {
+        "puesto": "COLISEO MUNICIPAL DE DEPORTES DE PAIPA",
+        "verde": 391,
+        "total": 1265,
+        "ratio": 0.3091
+      },
+      {
         "puesto": "I.E.EL ROSARIO SEDE CAMPESTRE",
-        "verde": 87,
-        "total": 282,
-        "ratio": 0.3085
+        "verde": 602,
+        "total": 2234,
+        "ratio": 0.2695
+      },
+      {
+        "puesto": "I.E.TOMAS VASQUEZ RODRIGUEZ",
+        "verde": 1176,
+        "total": 4943,
+        "ratio": 0.2379
       }
     ],
     "SOGAMOSO": [

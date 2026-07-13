@@ -23,7 +23,7 @@ OUT_PATH = os.path.join(BASE_DIR, "viz", "scatter_ca_se.png")
 def cargar_datos(conn):
     query = """
         SELECT
-            me.codigo_mesa AS codigo_mesa,
+            me.id AS mesa_id,
             m.nombre AS municipio,
             co.codigo AS corporacion,
             SUM(rv.votos) AS votos
@@ -31,12 +31,12 @@ def cargar_datos(conn):
         JOIN corporacion co ON co.id = rv.corporacion_id
         JOIN municipio m ON m.id = rv.municipio_id
         JOIN mesa me ON me.id = rv.mesa_id
-        GROUP BY me.codigo_mesa, m.nombre, co.codigo
+        GROUP BY me.id, m.nombre, co.codigo
     """
     df = pd.read_sql(query, conn)
     pivot = (
         df.pivot_table(
-            index=["codigo_mesa", "municipio"], columns="corporacion", values="votos"
+            index=["mesa_id", "municipio"], columns="corporacion", values="votos"
         )
         .reset_index()
         .dropna(subset=["CA", "SE"])

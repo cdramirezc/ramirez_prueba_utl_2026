@@ -5,8 +5,6 @@ import time
 from functools import lru_cache
 
 import requests
-from requests.adapters import HTTPAdapter
-from urllib3.util.retry import Retry
 
 logger = logging.getLogger(__name__)
 
@@ -21,15 +19,6 @@ def _get_session():
     global _session
     if _session is None:
         _session = requests.Session()
-        retry_strategy = Retry(
-            total=3,
-            backoff_factor=1,
-            status_forcelist=[500, 502, 503, 504],
-            allowed_methods=["GET"],
-        )
-        adapter = HTTPAdapter(max_retries=retry_strategy)
-        _session.mount("https://", adapter)
-        _session.mount("http://", adapter)
     return _session
 
 

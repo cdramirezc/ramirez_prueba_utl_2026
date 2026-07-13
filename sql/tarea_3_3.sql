@@ -1,70 +1,97 @@
 -- Atribución Determinística (8 pts)
--- Top 5 candidatos por atribución SE consolidada
+-- Top 5 candidatos por atribución CA → SE
 --
--- Fórmula: A_ij = (votos_cand / votos_partido) * votos_SE_partido
+-- Fórmula: A_ij = (votos_cand_CA / votos_partido_CA) × votos_SE_partido_homologado
 --
 -- Donde:
---   SE = Sección Electoral (municipio)
---   votos_cand       = total votos del candidato i en Senado
---   votos_partido    = total votos del partido j en Senado
---   votos_SE_partido = votos del partido j en la SE (municipio) específica
+--   CA = Cámara de Representantes
+--   SE = Senado (voto consolidado en los 4 municipios)
+--   Homologación: los códigos de partido difieren entre CA y SE para la misma
+--     colectividad (por ej. Alianza Verde usa codpar 57 en SE pero "Partido Verde"
+--     codpar 5 en CA para Boyacá). El mapa incluye:
+--       5  → 57  (Partido Verde / Alianza Verde)
+--       87 → 92  (Partido 87 / Pacto Histórico)
+--       2  → 2   (Conservador, identidad)
+--       10 → 10  (Centro Democrático, identidad)
+--       11 → 11  (identidad)
+--       ... los demás CA-only generan atribución 0 (sin voto SE homologable)
+--   "SOLO POR LA LISTA" se excluye del lado CA porque no representa un
+--     candidato individual — son votos de lista sin preferencia nominal.
 --
--- La atribución total del candidato es la suma de A_ij en todas las SE.
+-- La atribución total del candidato es: (su fracción del partido en CA)
+-- multiplicada por el voto consolidado del partido homologado en SE.
 
-WITH votos_candidato AS (
+WITH homologacion AS (
+    -- CA→SE: mapeo de códigos de partido
+    SELECT '5' AS ca_codpar, '57' AS se_codpar, 'Alianza Verde' AS se_partido
+    UNION ALL SELECT '87', '92', 'Pacto Histórico'
+    -- Códigos compartidos (identidad)
+    UNION ALL SELECT '2', '2', 'Partido Conservador Colombiano'
+    UNION ALL SELECT '10', '10', 'Centro Democrático'
+    UNION ALL SELECT '11', '11', 'Partido 11'
+    UNION ALL SELECT '188', '188', 'Partido 188'
+    UNION ALL SELECT '237', '237', 'Partido 237'
+    UNION ALL SELECT '252', '252', 'Partido 252'
+    UNION ALL SELECT '306', '306', 'Partido 306'
+    UNION ALL SELECT '347', '347', 'Partido 347'
+),
+-- Votos por candidato en Cámara (CA), excluyendo SOLO POR LA LISTA
+cand_ca AS (
     SELECT
-        c.id AS candidato_id,
-        c.nombre_completo AS candidato,
-        p.id AS partido_id,
-        p.nombre_partido AS partido,
+        ca.id AS candidato_id,
+        ca.nombre_completo AS candidato,
+        p.codigo_partido AS ca_codpar,
         SUM(rv.votos) AS total_votos
     FROM resultados_votacion rv
-    JOIN candidato c ON c.id = rv.candidato_id
-    JOIN partido p ON p.id = c.partido_id
+    JOIN candidato ca ON ca.id = rv.candidato_id
+    JOIN partido p ON p.id = ca.partido_id
     JOIN corporacion co ON co.id = rv.corporacion_id
-    WHERE co.codigo = 'SE'
-    GROUP BY c.id, c.nombre_completo, p.id, p.nombre_partido
+    WHERE co.codigo = 'CA'
+      AND ca.nombre_completo != 'SOLO POR LA LISTA'
+    GROUP BY ca.id, ca.nombre_completo, p.codigo_partido
 ),
-votos_partido AS (
+-- Total por partido en Cámara (CA)
+partido_ca AS (
     SELECT
-        p.id AS partido_id,
-        p.nombre_partido AS partido,
+        p.codigo_partido AS ca_codpar,
+        SUM(rv.votos) AS total_votos
+    FROM resultados_votacion rv
+    JOIN partido p ON p.id = rv.partido_id
+    JOIN corporacion co ON co.id = rv.corporacion_id
+    WHERE co.codigo = 'CA'
+    GROUP BY p.codigo_partido
+),
+-- Votos por partido en Senado (SE), consolidado en los 4 municipios
+partido_se AS (
+    SELECT
+        p.codigo_partido AS se_codpar,
+        p.nombre_partido,
         SUM(rv.votos) AS total_votos
     FROM resultados_votacion rv
     JOIN partido p ON p.id = rv.partido_id
     JOIN corporacion co ON co.id = rv.corporacion_id
     WHERE co.codigo = 'SE'
-    GROUP BY p.id, p.nombre_partido
-),
-votos_partido_se AS (
-    SELECT
-        p.id AS partido_id,
-        m.id AS seccion_id,
-        m.nombre AS seccion,
-        SUM(rv.votos) AS votos_se
-    FROM resultados_votacion rv
-    JOIN partido p ON p.id = rv.partido_id
-    JOIN municipio m ON m.id = rv.municipio_id
-    JOIN corporacion co ON co.id = rv.corporacion_id
-    WHERE co.codigo = 'SE'
-    GROUP BY p.id, m.id, m.nombre
-),
-atribucion AS (
-    SELECT
-        vc.candidato_id,
-        vc.candidato,
-        vc.partido,
-        vps.seccion,
-        ROUND(1.0 * vc.total_votos / vp.total_votos * vps.votos_se, 2) AS atribucion
-    FROM votos_candidato vc
-    JOIN votos_partido vp ON vc.partido_id = vp.partido_id
-    JOIN votos_partido_se vps ON vc.partido_id = vps.partido_id
+    GROUP BY p.codigo_partido
 )
 SELECT
-    candidato,
-    partido,
-    ROUND(SUM(atribucion), 2) AS atribucion_total
-FROM atribucion
-GROUP BY candidato_id, candidato, partido
-ORDER BY atribucion_total DESC
+    cc.candidato,
+    COALESCE(h.se_partido, ps.nombre_partido, 'Sin homologación SE') AS partido,
+    ROUND(
+        1.0 * cc.total_votos / pc.total_votos
+        * COALESCE(ps.total_votos, 0),
+        2
+    ) AS atribucion
+FROM cand_ca cc
+JOIN partido_ca pc ON cc.ca_codpar = pc.ca_codpar
+LEFT JOIN homologacion h ON cc.ca_codpar = h.ca_codpar
+LEFT JOIN partido_se ps ON COALESCE(h.se_codpar, cc.ca_codpar) = ps.se_codpar
+WHERE pc.total_votos > 0
+ORDER BY atribucion DESC
 LIMIT 5;
+
+-- Bonus (+2): Por qué el top CA no coincide con el top de atribución.
+-- Un partido con lista SE fuerte (ej. Alianza Verde, 7188 votos SE)
+-- infla la atribución de sus candidatos CA medianos aunque su cuota
+-- CA individual sea modesta. A la inversa, un candidato CA muy votado
+-- de un partido con poco arrastre SE (ej. Partido 121 con 0 votos SE
+-- homologables) obtendrá atribución nula, quedando fuera del top 5.

@@ -116,19 +116,33 @@ def _regenerar_html(data):
         return
 
     html = open(HTML_PATH, encoding="utf-8").read()
-    data_js_str = "var DATA = " + json.dumps(data, indent=2, ensure_ascii=False) + ";"
+    data_js_str = "var DATA = " + json.dumps(data, indent=2, ensure_ascii=False) + ";\n"
 
-    # Si ya existe un bloque DATA, reemplazarlo
-    import re
-    if "var DATA =" in html:
-        html = re.sub(
-            r"var DATA\s*=\s*\{.+?\};",
-            data_js_str,
-            html,
-            flags=re.DOTALL,
-        )
+    # Replace block using brace-counting: find "var DATA =" and matching "};"
+    start = html.find("var DATA =")
+    if start >= 0:
+        depth = 0
+        i = start
+        while i < len(html):
+            if html[i] == "{":
+                depth += 1
+            elif html[i] == "}":
+                depth -= 1
+                if depth == 0:
+                    end = i + 2  # include ";\n"?
+                    j = i + 1
+                    while j < len(html) and html[j] in "; \t\r\n":
+                        j += 1
+                    end = j
+                    break
+            i += 1
+        else:
+            print("No se pudo encontrar el cierre del bloque DATA, usando regex fallback")
+            import re
+            html = re.sub(r'var DATA\s*=\s*\{.*?\};', data_js_str, html, flags=re.DOTALL)
+            return
+        html = html[:start] + data_js_str + html[end:]
     else:
-        # Insertar después del último <script> CDN
         html = html.replace(
             '<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>',
             '<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>\n    <script>\n' + data_js_str + "\n    </script>",
