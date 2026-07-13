@@ -59,8 +59,6 @@ def main():
     pivot_votos = pivot_votos.reindex(top8)
 
     # Total de votos CA por municipio (todos los candidatos, incluyendo SOLO POR LA LISTA)
-    totales_municipio = df.groupby("municipio")["votos"].sum()
-    # Sumar tambien SOLO POR LA LISTA al total real por municipio
     conn = sqlite3.connect(DB_PATH)
     totales_reales = pd.read_sql(
         """

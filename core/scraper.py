@@ -55,26 +55,6 @@ def _cargar_codigos_internos():
     return result
 
 
-def _cargar_codigos_dane():
-    ruta = os.path.join(os.path.dirname(__file__), "..", "sample_data", "codigos_dane.json")
-    with open(ruta, encoding="utf-8") as f:
-        return json.load(f)
-
-
-def buscar_municipio(nombre):
-    data = _cargar_codigos_dane()
-    nombre = nombre.upper().strip()
-    for depto, info in data.items():
-        if nombre in info["municipios"]:
-            return {
-                "nombre": nombre,
-                "departamento": depto,
-                "dane_depto": info["dane"],
-                "dane_municipio": info["municipios"][nombre],
-            }
-    return None
-
-
 def buscar_municipio_por_nomenclator(nombre):
     codigos = _cargar_codigos_internos()
     nombre = nombre.upper().strip()
@@ -101,27 +81,29 @@ def obtener_mesas_por_municipio(nombre_municipio):
         return []
 
     mesas = []
-    for h in mun.get("h", []):
-        if h["l"] == 4:
-            for zi in h["p"]:
-                zona = idx_map.get(zi)
-                if not zona:
+    for nivel_zonas in mun.get("h", []):
+        if nivel_zonas["l"] != 4:
+            continue
+        for zona_idx in nivel_zonas["p"]:
+            zona = idx_map.get(zona_idx)
+            if not zona:
+                continue
+            for nivel_puestos in zona.get("h", []):
+                if nivel_puestos["l"] != 6:
                     continue
-                for h2 in zona.get("h", []):
-                    if h2["l"] == 6:
-                        for pi in h2["p"]:
-                            puesto = idx_map.get(pi)
-                            if not puesto:
-                                continue
-                            num_mesas = puesto.get("m", 0)
-                            for m in range(1, num_mesas + 1):
-                                codigo_mesa = puesto["c"] + str(m).zfill(6)
-                                mesas.append({
-                                    "zona": zona.get("n", ""),
-                                    "codigo_zona": zona.get("c", ""),
-                                    "puesto": puesto.get("n", ""),
-                                    "codigo_puesto": puesto.get("c", ""),
-                                    "mesa": m,
-                                    "codigo_mesa": codigo_mesa,
-                                })
+                for puesto_idx in nivel_puestos["p"]:
+                    puesto = idx_map.get(puesto_idx)
+                    if not puesto:
+                        continue
+                    num_mesas = puesto.get("m", 0)
+                    for numero_mesa in range(1, num_mesas + 1):
+                        codigo_mesa = puesto["c"] + str(numero_mesa).zfill(6)
+                        mesas.append({
+                            "zona": zona.get("n", ""),
+                            "codigo_zona": zona.get("c", ""),
+                            "puesto": puesto.get("n", ""),
+                            "codigo_puesto": puesto.get("c", ""),
+                            "mesa": numero_mesa,
+                            "codigo_mesa": codigo_mesa,
+                        })
     return mesas

@@ -56,16 +56,16 @@ def obtener_resultado_municipio(municipios):
                     logger.error("Error decodificando JSON mesa %s: %s", mesa_info["codigo_mesa"], e)
                     continue
 
-                for cam in data.get("camaras", []):
-                    for partido in cam.get("partotabla", []):
+                for camara in data.get("camaras", []):
+                    for partido in camara.get("partotabla", []):
                         act = partido.get("act", {})
-                        cantotabla = act.get("cantotabla", [])
+                        candidatos_tabla = act.get("cantotabla", [])
                         nombre_partido = act.get("nompar", str(act.get("codpar", "")))
                         codigo_partido = act.get("codpar", "")
 
-                        for c in cantotabla:
-                            nombre_completo = f"{c.get('nomcan', '')} {c.get('apecan', '')}".strip()
-                            votos = int(c.get("vot", 0) or 0)
+                        for candidato in candidatos_tabla:
+                            nombre_completo = f"{candidato.get('nomcan', '')} {candidato.get('apecan', '')}".strip()
+                            votos = int(candidato.get("vot", 0) or 0)
                             if not insertar_resultado(
                                 corporacion=cod_corporacion,
                                 municipio=nombre,
@@ -79,7 +79,7 @@ def obtener_resultado_municipio(municipios):
                                 partido=nombre_partido,
                                 codigo_partido=codigo_partido,
                                 candidato=nombre_completo,
-                                codigo_candidato=str(c.get("codcan", "")),
+                                codigo_candidato=str(candidato.get("codcan", "")),
                                 votos=votos,
                             ):
                                 saltados += 1
