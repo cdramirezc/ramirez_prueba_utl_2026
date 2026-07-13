@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Electoral Boyacá 2026</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  </head>
+  <body>
+    <h1>Dashboard Electoral Boyacá — Senado 2026</h1>
+
+    <div class="seccion">
+      <h2>1. Comparativo de Votos SE por Municipio</h2>
+      <div id="chartComparativo" style="width: 100%; height: 420px"></div>
+    </div>
+
+    <div class="seccion">
+      <h2>2. Top 10 Candidatos + Partido Líder por Municipio</h2>
+      <div class="selector">
+        <label for="selMunicipioCandidatos">Municipio:</label>
+        <select id="selMunicipioCandidatos"></select>
+      </div>
+      <div class="grid-2">
+        <div>
+          <canvas id="chartCandidatos" width="400" height="300"></canvas>
+        </div>
+        <div>
+          <div class="info-box" id="infoLider"></div>
+          <table id="tablaCandidatos">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Candidato</th>
+                <th>Partido</th>
+                <th>Votos</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="seccion">
+      <h2>3. Arrastre Verde — Ratio SE / Puesto</h2>
+      <div class="selector">
+        <label for="selMunicipioArrastre">Municipio:</label>
+        <select id="selMunicipioArrastre"></select>
+      </div>
+      <p style="font-size: 14px; color: #666; margin-bottom: 10px">
+        Ratio de votos de Alianza Verde (codpar 57) sobre total de votos por
+        puesto. Línea punteada: referencia 1.0
+      </p>
+      <canvas id="chartArrastre" width="800" height="350"></canvas>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
