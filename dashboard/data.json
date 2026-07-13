@@ -1,0 +1,279 @@
+{
+  "total_municipios": {
+    "DUITAMA": 12200,
+    "PAIPA": 282,
+    "SOGAMOSO": 358,
+    "TUNJA": 23381
+  },
+  "top10": {
+    "DUITAMA": [],
+    "PAIPA": [
+      {
+        "nombre": "YAMIT NOE HURTADO NEIRA",
+        "codpar": "5",
+        "votos": 4638
+      },
+      {
+        "nombre": "JAIME RAUL SALAMANCA TORRES",
+        "codpar": "5",
+        "votos": 1410
+      },
+      {
+        "nombre": "HECTOR DAVID CHAPARRO CHAPARRO",
+        "codpar": "2",
+        "votos": 1360
+      },
+      {
+        "nombre": "EDUAR ALEXIS TRIANA RINCON",
+        "codpar": "10",
+        "votos": 846
+      },
+      {
+        "nombre": "WILDER IVAN SUESCA OCHOA",
+        "codpar": "121",
+        "votos": 719
+      },
+      {
+        "nombre": "RAMIRO BARRAGAN ADAME",
+        "codpar": "5",
+        "votos": 345
+      },
+      {
+        "nombre": "NANCY YANETH ZAPATA PACHON",
+        "codpar": "120",
+        "votos": 262
+      },
+      {
+        "nombre": "OSCAR LEONARDO AVILA ROMERO",
+        "codpar": "2",
+        "votos": 257
+      },
+      {
+        "nombre": "INGRID MARLEN SOGAMOSO ALFONSO",
+        "codpar": "121",
+        "votos": 189
+      },
+      {
+        "nombre": "HERNEL DAVID ORTEGA GOMEZ",
+        "codpar": "121",
+        "votos": 179
+      }
+    ],
+    "SOGAMOSO": [
+      {
+        "nombre": "HECTOR DAVID CHAPARRO CHAPARRO",
+        "codpar": "2",
+        "votos": 5345
+      },
+      {
+        "nombre": "RAMIRO BARRAGAN ADAME",
+        "codpar": "5",
+        "votos": 2663
+      },
+      {
+        "nombre": "DIANA PAOLA HERRERA NUÑEZ",
+        "codpar": "2",
+        "votos": 1858
+      },
+      {
+        "nombre": "JAIME RAUL SALAMANCA TORRES",
+        "codpar": "5",
+        "votos": 1687
+      },
+      {
+        "nombre": "NADIA ALEXANDRA CARREÑO AVELLA",
+        "codpar": "122",
+        "votos": 1656
+      },
+      {
+        "nombre": "FABIAN CAMILO ROJAS BARRERA",
+        "codpar": "122",
+        "votos": 1331
+      },
+      {
+        "nombre": "YURY NEILL DIAZ ARANGUREN",
+        "codpar": "120",
+        "votos": 1299
+      },
+      {
+        "nombre": "JAIRO ENRIQUE CASTIBLANCO PARRA",
+        "codpar": "120",
+        "votos": 1255
+      },
+      {
+        "nombre": "OSCAR LEONARDO AVILA ROMERO",
+        "codpar": "2",
+        "votos": 1181
+      },
+      {
+        "nombre": "YAMIT NOE HURTADO NEIRA",
+        "codpar": "5",
+        "votos": 1150
+      }
+    ],
+    "TUNJA": [
+      {
+        "nombre": "RAMIRO BARRAGAN ADAME",
+        "codpar": "5",
+        "votos": 1469
+      },
+      {
+        "nombre": "YAMIT NOE HURTADO NEIRA",
+        "codpar": "5",
+        "votos": 1425
+      },
+      {
+        "nombre": "JAIME RAUL SALAMANCA TORRES",
+        "codpar": "5",
+        "votos": 1392
+      },
+      {
+        "nombre": "INGRID MARLEN SOGAMOSO ALFONSO",
+        "codpar": "121",
+        "votos": 1099
+      },
+      {
+        "nombre": "FABIAN CAMILO ROJAS BARRERA",
+        "codpar": "122",
+        "votos": 1094
+      },
+      {
+        "nombre": "WILDER IVAN SUESCA OCHOA",
+        "codpar": "121",
+        "votos": 1054
+      },
+      {
+        "nombre": "JOSE DARIO MAHECHA CASTILLO",
+        "codpar": "121",
+        "votos": 855
+      },
+      {
+        "nombre": "HECTOR DAVID CHAPARRO CHAPARRO",
+        "codpar": "2",
+        "votos": 844
+      },
+      {
+        "nombre": "OSCAR LEONARDO AVILA ROMERO",
+        "codpar": "2",
+        "votos": 758
+      },
+      {
+        "nombre": "JAIRO ENRIQUE CASTIBLANCO PARRA",
+        "codpar": "120",
+        "votos": 652
+      }
+    ]
+  },
+  "lider_partido": {
+    "DUITAMA": {
+      "codpar": "92",
+      "votos": 3539
+    },
+    "PAIPA": {
+      "codpar": "57",
+      "votos": 87
+    },
+    "SOGAMOSO": {
+      "codpar": "92",
+      "votos": 113
+    },
+    "TUNJA": {
+      "codpar": "92",
+      "votos": 6225
+    }
+  },
+  "arrastre": {
+    "DUITAMA": [
+      {
+        "puesto": "ANTIGUO TERMINAL DE TRANSPORTE",
+        "verde": 539,
+        "total": 3434,
+        "ratio": 0.157
+      },
+      {
+        "puesto": "COL JESUS EUCARISTIA",
+        "verde": 364,
+        "total": 2133,
+        "ratio": 0.1707
+      },
+      {
+        "puesto": "COL LA NUEVA FAMILIA",
+        "verde": 495,
+        "total": 2643,
+        "ratio": 0.1873
+      },
+      {
+        "puesto": "COL SANTO T DE AQUINO SD PRIA 1",
+        "verde": 371,
+        "total": 2559,
+        "ratio": 0.145
+      },
+      {
+        "puesto": "COL SANTO T DE AQUINO SD PRIA 2",
+        "verde": 265,
+        "total": 1431,
+        "ratio": 0.1852
+      }
+    ],
+    "PAIPA": [
+      {
+        "puesto": "I.E.EL ROSARIO SEDE CAMPESTRE",
+        "verde": 87,
+        "total": 282,
+        "ratio": 0.3085
+      }
+    ],
+    "SOGAMOSO": [
+      {
+        "puesto": "COL NZADO GUSTAVO JIMENEZ",
+        "verde": 51,
+        "total": 358,
+        "ratio": 0.1425
+      }
+    ],
+    "TUNJA": [
+      {
+        "puesto": "AUDITORIO GUSTAVO M CASTELLANOS COMFABOY",
+        "verde": 778,
+        "total": 3439,
+        "ratio": 0.2262
+      },
+      {
+        "puesto": "C.A.S.D. BARRIO SAN ANTONIO",
+        "verde": 30,
+        "total": 246,
+        "ratio": 0.122
+      },
+      {
+        "puesto": "COL DE BOYACA SD JOSE IGNACIO DE MARQUEZ",
+        "verde": 521,
+        "total": 2602,
+        "ratio": 0.2002
+      },
+      {
+        "puesto": "COL. BOYACA FCO DE PAULA SANTANDER",
+        "verde": 990,
+        "total": 4692,
+        "ratio": 0.211
+      },
+      {
+        "puesto": "COLEGIO SALESIANO MALDONADO",
+        "verde": 1142,
+        "total": 5453,
+        "ratio": 0.2094
+      },
+      {
+        "puesto": "I.T. GONZALO SUAREZ RENDON SEDE CENTRAL",
+        "verde": 619,
+        "total": 2570,
+        "ratio": 0.2409
+      },
+      {
+        "puesto": "IES JUAN CASTELLANOS SD CRISANTO LUQUE",
+        "verde": 936,
+        "total": 4379,
+        "ratio": 0.2137
+      }
+    ]
+  }
+}

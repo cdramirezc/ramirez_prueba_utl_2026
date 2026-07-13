@@ -1,15 +1,36 @@
 import json
 import logging
 import os
+import time
 from functools import lru_cache
 
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 logger = logging.getLogger(__name__)
 
 NOMENCLATOR_URL = "https://resultadospreccongreso2026.registraduria.gov.co/json/nomenclator.json"
 CACHE_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "outputs")
 NOMENCLATOR_CACHE = os.path.join(CACHE_DIR, "nomenclator.json")
+
+_session = None
+
+
+def _get_session():
+    global _session
+    if _session is None:
+        _session = requests.Session()
+        retry_strategy = Retry(
+            total=3,
+            backoff_factor=1,
+            status_forcelist=[500, 502, 503, 504],
+            allowed_methods=["GET"],
+        )
+        adapter = HTTPAdapter(max_retries=retry_strategy)
+        _session.mount("https://", adapter)
+        _session.mount("http://", adapter)
+    return _session
 
 
 def _fetch_nomenclator():
@@ -19,14 +40,22 @@ def _fetch_nomenclator():
             logger.info("Nomenclator cargado desde cache (%s)", NOMENCLATOR_CACHE)
             return data
     logger.info("Descargando nomenclator desde %s", NOMENCLATOR_URL)
-    resp = requests.get(NOMENCLATOR_URL, timeout=30)
-    resp.raise_for_status()
-    data = resp.json()
-    os.makedirs(CACHE_DIR, exist_ok=True)
-    with open(NOMENCLATOR_CACHE, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False)
-    logger.info("Nomenclator guardado en cache (%s)", NOMENCLATOR_CACHE)
-    return data
+    session = _get_session()
+    for intento in range(3):
+        try:
+            resp = session.get(NOMENCLATOR_URL, timeout=30)
+            resp.raise_for_status()
+            data = resp.json()
+            os.makedirs(CACHE_DIR, exist_ok=True)
+            with open(NOMENCLATOR_CACHE, "w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False)
+            logger.info("Nomenclator guardado en cache (%s)", NOMENCLATOR_CACHE)
+            return data
+        except (requests.RequestException, ValueError) as e:
+            logger.error("Error descargando nomenclator (intento %d/3): %s", intento + 1, e)
+            if intento < 2:
+                time.sleep(2 ** intento)
+    raise RuntimeError("No se pudo descargar el nomenclator tras 3 intentos")
 
 
 @lru_cache(maxsize=1)

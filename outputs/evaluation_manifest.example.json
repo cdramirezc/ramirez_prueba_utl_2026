@@ -1,0 +1,64 @@
+{
+  "meta": {
+    "nombre": "NOMBRE APELLIDO",
+    "email": "nombre@ejemplo.com",
+    "url_repo": "https://github.com/usuario/prueba_utl_2026",
+    "fecha": "2026-07-13"
+  },
+  "checks": [
+    {
+      "desc": "DB existe en db/puestos_2026.db",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "desc": "Municipios: 4/4",
+      "ok": true,
+      "detail": "{'DUITAMA': 13632, 'PAIPA': 25683, 'SOGAMOSO': 77394, 'TUNJA': 180928}"
+    },
+    {
+      "desc": "Tabla resultados_votacion: ~297637 registros",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "sql": [
+    {
+      "name": "tarea_3_1 - Arrastre Verde",
+      "status": "OK",
+      "rows": 34,
+      "sample": [
+        "('TUNJA', '0700001010001', 'AUDITORIO GUSTAVO M CASTELLANOS COMFABOY', 778, 3439, 0.2262)"
+      ]
+    },
+    {
+      "name": "tarea_3_2 - Concentracion >60%",
+      "status": "OK",
+      "rows": 1919,
+      "sample": [
+        "(1, 'AUDITORIO GUSTAVO M CASTELLANOS COMFABOY', 'ZONA01', 'TUNJA', '92', 'SOLO POR LA LISTA', '0', 'Senado', 59, 59, 100.0)"
+      ]
+    },
+    {
+      "name": "tarea_3_3 - Atribucion Deterministica",
+      "status": "OK",
+      "rows": 5,
+      "sample": [
+        "('SOLO POR LA LISTA', '92', 6319.0)"
+      ]
+    }
+  ],
+  "visualizations": {
+    "scatter": {
+      "stdout": "r=0.846 | pendiente=0.874 | n_mesas=129",
+      "stderr": "",
+      "returncode": 0
+    },
+    "heatmap": {
+      "stdout": "Heatmap guardado en: C:/repo/viz/heatmap_municipios.png",
+      "stderr": "",
+      "returncode": 0
+    }
+  },
+  "errors": []
+}

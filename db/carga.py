@@ -4,7 +4,7 @@ import os
 
 logger = logging.getLogger(__name__)
 
-DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "carga_log.db")
+DB_PATH = os.path.join(os.path.dirname(__file__), "puestos_2026.db")
 
 
 def get_connection():

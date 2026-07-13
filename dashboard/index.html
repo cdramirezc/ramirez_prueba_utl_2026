@@ -1,61 +1,385 @@
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard Electoral Boyacá 2026</title>
-    <link rel="stylesheet" href="style.css" />
-    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-  </head>
-  <body>
-    <h1>Dashboard Electoral Boyacá — Senado 2026</h1>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Electoral Boyacá 2026</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{--bg:#f0f2f5;--card:#fff;--text:#333;--heading:#1a1a2e;--border:#0f3460;--accent:#0f3460;--hover:#f5f5f5;--table-bg:#fff;--badge-text:#fff;--info-bg:#e8f4fd;--shadow:rgba(0,0,0,0.08)}
+[data-theme="dark"]{--bg:#121212;--card:#1e1e1e;--text:#e0e0e0;--heading:#bbbbbb;--border:#3498db;--accent:#3498db;--hover:#2a2a2a;--table-bg:#1e1e1e;--badge-text:#fff;--info-bg:#1a2a3e;--shadow:rgba(0,0,0,0.4)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;background:var(--bg);padding:20px;color:var(--text);transition:background .3s,color .3s}
+h1{text-align:center;margin-bottom:30px;color:var(--heading);font-size:28px}
+h2{color:var(--heading);margin-bottom:15px;font-size:20px;border-bottom:3px solid var(--border);padding-bottom:8px}
+.seccion{background:var(--card);border-radius:12px;padding:25px;margin-bottom:30px;box-shadow:0 2px 12px var(--shadow)}
+.selector{margin:15px 0;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.selector label{font-weight:600;font-size:15px}
+.selector select{padding:8px 14px;border:2px solid var(--border);border-radius:8px;font-size:15px;background:var(--card);color:var(--text);cursor:pointer;min-width:200px}
+.selector select:focus{outline:none;border-color:#e94560}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:10px}
+@media(max-width:768px){.grid-2{grid-template-columns:1fr}}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid #444;color:var(--text)}
+th{background:var(--border);color:var(--badge-text);font-weight:600}
+tr:hover{background:var(--hover)}
+.badge{display:inline-block;padding:3px 10px;border-radius:12px;color:var(--badge-text);font-size:12px;font-weight:700}
+.info-box{background:var(--info-bg);border-left:4px solid var(--border);padding:12px 16px;border-radius:6px;margin:10px 0;font-size:14px}
+.info-box strong{color:var(--border)}
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.btn{padding:8px 16px;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;transition:opacity .2s}
+.btn:hover{opacity:.8}
+.btn-csv{background:#27ae60;color:#fff}
+.btn-dark{background:var(--accent);color:#fff;margin-left:auto}
+[data-theme="dark"] .btn-dark{background:#f39c12}
+@media(max-width:600px){.toolbar{flex-direction:column;align-items:stretch}.btn-dark{margin-left:0}}
+</style>
+</head>
+<body>
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:10px">
+<h1 style="margin-bottom:0">Dashboard Electoral Boyac&aacute; &mdash; Senado 2026</h1>
+<button class="btn btn-dark" onclick="toggleDark()" id="btnDark">&#127769; Modo Oscuro</button>
+</div>
 
-    <div class="seccion">
-      <h2>1. Comparativo de Votos SE por Municipio</h2>
-      <div id="chartComparativo" style="width: 100%; height: 420px"></div>
-    </div>
+<div class="seccion">
+<h2>1. Comparativo de Votos SE por Municipio</h2>
+<div id="chartComparativo" style="width:100%;height:420px"></div>
+</div>
 
-    <div class="seccion">
-      <h2>2. Top 10 Candidatos + Partido Líder por Municipio</h2>
-      <div class="selector">
-        <label for="selMunicipioCandidatos">Municipio:</label>
-        <select id="selMunicipioCandidatos"></select>
-      </div>
-      <div class="grid-2">
-        <div>
-          <canvas id="chartCandidatos" width="400" height="300"></canvas>
-        </div>
-        <div>
-          <div class="info-box" id="infoLider"></div>
-          <table id="tablaCandidatos">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Candidato</th>
-                <th>Partido</th>
-                <th>Votos</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+<div class="seccion">
+<h2>2. Top 10 Candidatos + Partido L&iacute;der por Municipio</h2>
+<div class="selector">
+<label for="selMunicipioCandidatos">Municipio:</label>
+<select id="selMunicipioCandidatos"></select>
+</div>
+<div class="grid-2">
+<div><canvas id="chartCandidatos" width="400" height="300"></canvas></div>
+<div>
+<div class="toolbar">
+<div class="info-box" id="infoLider"></div>
+<button class="btn btn-csv" onclick="exportCSV()">&#128229; Exportar CSV</button>
+</div>
+<table id="tablaCandidatos"><thead><tr><th>#</th><th>Candidato</th><th>Partido</th><th>Votos</th></tr></thead><tbody></tbody></table>
+</div>
+</div>
+</div>
 
-    <div class="seccion">
-      <h2>3. Arrastre Verde — Ratio SE / Puesto</h2>
-      <div class="selector">
-        <label for="selMunicipioArrastre">Municipio:</label>
-        <select id="selMunicipioArrastre"></select>
-      </div>
-      <p style="font-size: 14px; color: #666; margin-bottom: 10px">
-        Ratio de votos de Alianza Verde (codpar 57) sobre total de votos por
-        puesto. Línea punteada: referencia 1.0
-      </p>
-      <canvas id="chartArrastre" width="800" height="350"></canvas>
-    </div>
+<div class="seccion">
+<h2>3. Arrastre Verde &mdash; Ratio SE / Puesto</h2>
+<div class="selector">
+<label for="selMunicipioArrastre">Municipio:</label>
+<select id="selMunicipioArrastre"></select>
+</div>
+<p style="font-size:14px;color:#666;margin-bottom:10px">Ratio de votos de Alianza Verde (codpar 57) sobre total de votos por puesto. L&iacute;nea punteada: referencia 1.0</p>
+<canvas id="chartArrastre" width="800" height="350"></canvas>
+</div>
 
-    <script src="app.js"></script>
-  </body>
+<script>
+var DATA = {
+  "total_municipios": {
+    "DUITAMA": 12200,
+    "PAIPA": 282,
+    "SOGAMOSO": 358,
+    "TUNJA": 23381
+  },
+  "top10": {
+    "DUITAMA": [],
+    "PAIPA": [
+      {
+        "nombre": "YAMIT NOE HURTADO NEIRA",
+        "codpar": "5",
+        "votos": 4638
+      },
+      {
+        "nombre": "JAIME RAUL SALAMANCA TORRES",
+        "codpar": "5",
+        "votos": 1410
+      },
+      {
+        "nombre": "HECTOR DAVID CHAPARRO CHAPARRO",
+        "codpar": "2",
+        "votos": 1360
+      },
+      {
+        "nombre": "EDUAR ALEXIS TRIANA RINCON",
+        "codpar": "10",
+        "votos": 846
+      },
+      {
+        "nombre": "WILDER IVAN SUESCA OCHOA",
+        "codpar": "121",
+        "votos": 719
+      },
+      {
+        "nombre": "RAMIRO BARRAGAN ADAME",
+        "codpar": "5",
+        "votos": 345
+      },
+      {
+        "nombre": "NANCY YANETH ZAPATA PACHON",
+        "codpar": "120",
+        "votos": 262
+      },
+      {
+        "nombre": "OSCAR LEONARDO AVILA ROMERO",
+        "codpar": "2",
+        "votos": 257
+      },
+      {
+        "nombre": "INGRID MARLEN SOGAMOSO ALFONSO",
+        "codpar": "121",
+        "votos": 189
+      },
+      {
+        "nombre": "HERNEL DAVID ORTEGA GOMEZ",
+        "codpar": "121",
+        "votos": 179
+      }
+    ],
+    "SOGAMOSO": [
+      {
+        "nombre": "HECTOR DAVID CHAPARRO CHAPARRO",
+        "codpar": "2",
+        "votos": 5345
+      },
+      {
+        "nombre": "RAMIRO BARRAGAN ADAME",
+        "codpar": "5",
+        "votos": 2663
+      },
+      {
+        "nombre": "DIANA PAOLA HERRERA NUÑEZ",
+        "codpar": "2",
+        "votos": 1858
+      },
+      {
+        "nombre": "JAIME RAUL SALAMANCA TORRES",
+        "codpar": "5",
+        "votos": 1687
+      },
+      {
+        "nombre": "NADIA ALEXANDRA CARREÑO AVELLA",
+        "codpar": "122",
+        "votos": 1656
+      },
+      {
+        "nombre": "FABIAN CAMILO ROJAS BARRERA",
+        "codpar": "122",
+        "votos": 1331
+      },
+      {
+        "nombre": "YURY NEILL DIAZ ARANGUREN",
+        "codpar": "120",
+        "votos": 1299
+      },
+      {
+        "nombre": "JAIRO ENRIQUE CASTIBLANCO PARRA",
+        "codpar": "120",
+        "votos": 1255
+      },
+      {
+        "nombre": "OSCAR LEONARDO AVILA ROMERO",
+        "codpar": "2",
+        "votos": 1181
+      },
+      {
+        "nombre": "YAMIT NOE HURTADO NEIRA",
+        "codpar": "5",
+        "votos": 1150
+      }
+    ],
+    "TUNJA": [
+      {
+        "nombre": "RAMIRO BARRAGAN ADAME",
+        "codpar": "5",
+        "votos": 1469
+      },
+      {
+        "nombre": "YAMIT NOE HURTADO NEIRA",
+        "codpar": "5",
+        "votos": 1425
+      },
+      {
+        "nombre": "JAIME RAUL SALAMANCA TORRES",
+        "codpar": "5",
+        "votos": 1392
+      },
+      {
+        "nombre": "INGRID MARLEN SOGAMOSO ALFONSO",
+        "codpar": "121",
+        "votos": 1099
+      },
+      {
+        "nombre": "FABIAN CAMILO ROJAS BARRERA",
+        "codpar": "122",
+        "votos": 1094
+      },
+      {
+        "nombre": "WILDER IVAN SUESCA OCHOA",
+        "codpar": "121",
+        "votos": 1054
+      },
+      {
+        "nombre": "JOSE DARIO MAHECHA CASTILLO",
+        "codpar": "121",
+        "votos": 855
+      },
+      {
+        "nombre": "HECTOR DAVID CHAPARRO CHAPARRO",
+        "codpar": "2",
+        "votos": 844
+      },
+      {
+        "nombre": "OSCAR LEONARDO AVILA ROMERO",
+        "codpar": "2",
+        "votos": 758
+      },
+      {
+        "nombre": "JAIRO ENRIQUE CASTIBLANCO PARRA",
+        "codpar": "120",
+        "votos": 652
+      }
+    ]
+  },
+  "lider_partido": {
+    "DUITAMA": {
+      "codpar": "92",
+      "votos": 3539
+    },
+    "PAIPA": {
+      "codpar": "57",
+      "votos": 87
+    },
+    "SOGAMOSO": {
+      "codpar": "92",
+      "votos": 113
+    },
+    "TUNJA": {
+      "codpar": "92",
+      "votos": 6225
+    }
+  },
+  "arrastre": {
+    "DUITAMA": [
+      {
+        "puesto": "ANTIGUO TERMINAL DE TRANSPORTE",
+        "verde": 539,
+        "total": 3434,
+        "ratio": 0.157
+      },
+      {
+        "puesto": "COL JESUS EUCARISTIA",
+        "verde": 364,
+        "total": 2133,
+        "ratio": 0.1707
+      },
+      {
+        "puesto": "COL LA NUEVA FAMILIA",
+        "verde": 495,
+        "total": 2643,
+        "ratio": 0.1873
+      },
+      {
+        "puesto": "COL SANTO T DE AQUINO SD PRIA 1",
+        "verde": 371,
+        "total": 2559,
+        "ratio": 0.145
+      },
+      {
+        "puesto": "COL SANTO T DE AQUINO SD PRIA 2",
+        "verde": 265,
+        "total": 1431,
+        "ratio": 0.1852
+      }
+    ],
+    "PAIPA": [
+      {
+        "puesto": "I.E.EL ROSARIO SEDE CAMPESTRE",
+        "verde": 87,
+        "total": 282,
+        "ratio": 0.3085
+      }
+    ],
+    "SOGAMOSO": [
+      {
+        "puesto": "COL NZADO GUSTAVO JIMENEZ",
+        "verde": 51,
+        "total": 358,
+        "ratio": 0.1425
+      }
+    ],
+    "TUNJA": [
+      {
+        "puesto": "AUDITORIO GUSTAVO M CASTELLANOS COMFABOY",
+        "verde": 778,
+        "total": 3439,
+        "ratio": 0.2262
+      },
+      {
+        "puesto": "C.A.S.D. BARRIO SAN ANTONIO",
+        "verde": 30,
+        "total": 246,
+        "ratio": 0.122
+      },
+      {
+        "puesto": "COL DE BOYACA SD JOSE IGNACIO DE MARQUEZ",
+        "verde": 521,
+        "total": 2602,
+        "ratio": 0.2002
+      },
+      {
+        "puesto": "COL. BOYACA FCO DE PAULA SANTANDER",
+        "verde": 990,
+        "total": 4692,
+        "ratio": 0.211
+      },
+      {
+        "puesto": "COLEGIO SALESIANO MALDONADO",
+        "verde": 1142,
+        "total": 5453,
+        "ratio": 0.2094
+      },
+      {
+        "puesto": "I.T. GONZALO SUAREZ RENDON SEDE CENTRAL",
+        "verde": 619,
+        "total": 2570,
+        "ratio": 0.2409
+      },
+      {
+        "puesto": "IES JUAN CASTELLANOS SD CRISANTO LUQUE",
+        "verde": 936,
+        "total": 4379,
+        "ratio": 0.2137
+      }
+    ]
+  }
+};
+
+var PARTY_COLORS = {57:"#007C34",92:"#7B2D8B",10:"#1E477D",2:"#E07B00"};
+function getPartyColor(c){return PARTY_COLORS[c]||"#888"}
+function getPartyName(c){var n={57:"Alianza Verde",92:"Pacto Histórico",10:"Centro Democrático",2:"Conservador",3:"Cambio Radical",17:"Dignidad & Compromiso",43:"Partido 43",44:"Partido 44",55:"Partido 55",9:"Partido 9",40:"Partido 40",39:"Partido 39",34:"Partido 34",33:"Partido 33",18:"Partido 18",11:"Centro Democrático",6:"ASI",170:"Partido 170",188:"Partido 188",234:"Partido 234",237:"Partido 237",252:"Partido 252",285:"Partido 285",300:"Frente por la Vida",306:"Partido 306",347:"Partido 347",5:"Alianza Verde CC",87:"Partido 87",120:"Partido 120",121:"Partido 121",122:"Partido 122"};return n[c]||"Partido "+c}
+
+function toggleDark(){var t=document.documentElement.getAttribute("data-theme");if(t==="dark"){document.documentElement.removeAttribute("data-theme");document.getElementById("btnDark").textContent="&#127769; Modo Oscuro"}else{document.documentElement.setAttribute("data-theme","dark");document.getElementById("btnDark").textContent="&#9728;&#65039; Modo Claro"}}
+
+function exportCSV(){var mun=document.getElementById("selMunicipioCandidatos").value;var cands=DATA.top10[mun]||[];if(!cands.length){alert("No hay datos de candidatos para "+mun);return}var rows=[["#","Candidato","Partido","CodPar","Votos"]];cands.forEach(function(c,i){rows.push([i+1,c.nombre,getPartyName(c.codpar),c.codpar,c.votos])});var csv=rows.map(function(r){return r.map(function(v){return'"'+String(v).replace(/"/g,'""')+'"'}).join(",")}).join("
+");var blob=new Blob(["﻿"+csv],{type:"text/csv;charset=utf-8"});var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="candidatos_"+mun.toLowerCase()+".csv";document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(a.href)}
+
+(function(){var muns=Object.keys(DATA.total_municipios).sort();var votos=muns.map(function(m){return DATA.total_municipios[m]});var colors=muns.map(function(m){var l=DATA.lider_partido[m];return getPartyColor(l?l.codpar:"")});var trace={x:muns,y:votos,type:"bar",marker:{color:colors},text:votos.map(function(v){return v.toLocaleString()}),textposition:"outside",textfont:{size:14,color:"#333"},hovertemplate:"<b>%{x}</b><br>Votos: %{y:,.0f}<extra></extra>"};var layout={title:{text:"Total Votos Senado 2026 por Municipio",font:{size:18}},xaxis:{title:"Municipio",tickfont:{size:14}},yaxis:{title:"Votos",gridcolor:"#e0e0e0"},plot_bgcolor:"#fafafa",paper_bgcolor:"#fff",margin:{t:50,r:30,b:50,l:60},hoverlabel:{bgcolor:"#0f3460",font:{color:"#fff"}}};Plotly.newPlot("chartComparativo",[trace],layout,{responsive:true})})();
+
+var municipalities=Object.keys(DATA.total_municipios).sort();
+var selCandidatos=document.getElementById("selMunicipioCandidatos");
+var selArrastre=document.getElementById("selMunicipioArrastre");
+var chartCandidatos=null,chartArrastre=null;
+municipalities.forEach(function(m){var o1=document.createElement("option");o1.value=m;o1.textContent=m;selCandidatos.appendChild(o1);var o2=document.createElement("option");o2.value=m;o2.textContent=m;selArrastre.appendChild(o2)});
+
+function renderCandidatos(mun){var cands=DATA.top10[mun]||[];var lider=DATA.lider_partido[mun];var info=document.getElementById("infoLider");if(lider){info.innerHTML="<strong>Partido líder SE:</strong> "+getPartyName(lider.codpar)+" (codpar "+lider.codpar+") — <strong>"+lider.votos.toLocaleString()+"</strong> votos"}var tbody=document.querySelector("#tablaCandidatos tbody");tbody.innerHTML="";cands.forEach(function(c,i){var tr=document.createElement("tr");tr.innerHTML="<td>"+(i+1)+'</td><td>'+c.nombre+'</td><td><span class="badge" style="background:'+getPartyColor(c.codpar)+'">'+getPartyName(c.codpar)+"</span></td><td>"+c.votos.toLocaleString()+"</td>";tbody.appendChild(tr)});var ctx=document.getElementById("chartCandidatos").getContext("2d");if(chartCandidatos)chartCandidatos.destroy();var labels=cands.map(function(c){return c.nombre.substring(0,20)+(c.nombre.length>20?"...":"")});var values=cands.map(function(c){return c.votos});var barColors=cands.map(function(c){return getPartyColor(c.codpar)});chartCandidatos=new Chart(ctx,{type:"bar",data:{labels:labels,datasets:[{label:"Votos",data:values,backgroundColor:barColors,borderColor:barColors,borderWidth:1,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:true,indexAxis:"y",plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return ctx.raw.toLocaleString()+" votos"}}}},scales:{x:{title:{display:true,text:"Votos",font:{weight:"bold"}},grid:{color:"#e8e8e8"}},y:{ticks:{font:{size:10}},grid:{display:false}}}}})}
+
+selCandidatos.addEventListener("change",function(){renderCandidatos(this.value)});renderCandidatos(municipalities[0]);
+
+function renderArrastre(mun){var data=DATA.arrastre[mun]||[];var ctx=document.getElementById("chartArrastre").getContext("2d");if(chartArrastre)chartArrastre.destroy();var labels=data.map(function(d){return d.puesto});var ratios=data.map(function(d){return d.ratio});var verdes=data.map(function(d){return d.verde});var totals=data.map(function(d){return d.total});chartArrastre=new Chart(ctx,{type:"bar",data:{labels:labels,datasets:[{label:"Ratio Verde / Total",data:ratios,backgroundColor:"rgba(0,124,52,0.7)",borderColor:"#007C34",borderWidth:2,borderRadius:4,order:2,yAxisID:"y"},{label:"Votos Verde",data:verdes,backgroundColor:"rgba(0,124,52,0.15)",borderColor:"#007C34",borderWidth:1,borderDash:[4,4],type:"line",pointRadius:4,pointBackgroundColor:"#007C34",fill:false,order:1,yAxisID:"y1"}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{position:"top"},tooltip:{callbacks:{label:function(ctx){var i=ctx.dataIndex;if(ctx.datasetIndex===0)return"Ratio: "+ctx.raw.toFixed(4);return"Votos: "+ctx.raw.toLocaleString()+" / Total: "+totals[i].toLocaleString()}}}},scales:{y:{position:"left",title:{display:true,text:"Ratio Verde / Total"},min:0,max:Math.max(1.0,Math.max.apply(null,ratios)*1.3),grid:{color:"#e8e8e8"}},y1:{position:"right",title:{display:true,text:"Votos Verde"},grid:{display:false},beginAtZero:true},x:{ticks:{maxRotation:45,minRotation:0,font:{size:9}},grid:{display:false}}}},plugins:[{id:"referenceLine",afterDraw:function(chart){var yScale=chart.scales.y;var ctx2=chart.ctx;var yPixel=yScale.getPixelForValue(1.0);if(yPixel===undefined||yPixel<yScale.top||yPixel>yScale.bottom)return;ctx2.save();ctx2.beginPath();ctx2.strokeStyle="#E07B00";ctx2.lineWidth=2;ctx2.setLineDash([8,6]);ctx2.moveTo(yScale.left,yPixel);ctx2.lineTo(yScale.right,yPixel);ctx2.stroke();ctx2.fillStyle="#E07B00";ctx2.font="bold 12px sans-serif";ctx2.textAlign="right";ctx2.fillText("Referencia 1.0",yScale.right-4,yPixel-6);ctx2.restore()}}]})}
+
+selArrastre.addEventListener("change",function(){renderArrastre(this.value)});renderArrastre(municipalities[0]);
+</script>
+</body>
 </html>

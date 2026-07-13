@@ -203,6 +203,10 @@ cython_debug/
 # Temporary file for partial code execution
 tempCodeRunnerFile.py
 
+# Database artifact (>50 MB, distributed as Release asset)
+db/puestos_2026.db
+carga_log.db
+
 # Ruff stuff:
 .ruff_cache/
 

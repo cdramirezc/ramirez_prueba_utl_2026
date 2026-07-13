@@ -1,0 +1,100 @@
+{
+  "meta": {
+    "nombre": "CESAR RAMIREZ",
+    "email": "cesar.ramirez@ejemplo.com",
+    "url_repo": "https://github.com/cesar/ramirez_prueba_utl_2026",
+    "fecha": "2026-07-13"
+  },
+  "checks": [
+    {
+      "desc": "DB existe en C:\\Users\\CESAR\\Documents\\GitHub\\ramirez_prueba_utl_2026\\db\\puestos_2026.db",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "desc": "Municipios: 4/4",
+      "ok": true,
+      "detail": "{'DUITAMA': 75166, 'PAIPA': 25683, 'SOGAMOSO': 77394, 'TUNJA': 180928}"
+    },
+    {
+      "desc": "Tabla partido: 83 registros",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "desc": "Tabla municipio: 4 registros",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "desc": "Tabla zona: 11 registros",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "desc": "Tabla puesto: 38 registros",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "desc": "Tabla mesa: 604 registros",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "desc": "Tabla candidato: 1353 registros",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "desc": "Tabla resultados_votacion: 359166 registros",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "sql": [
+    {
+      "name": "tarea_3_1 - Arrastre Verde",
+      "status": "OK",
+      "rows": 38,
+      "sample": [
+        "('DUITAMA', '0700079010002', 'ANTIGUO TERMINAL DE TRANSPORTE', 539, 0, None)",
+        "('DUITAMA', '0700079010003', 'COL SANTO T DE AQUINO SD PRIA 1', 371, 0, None)",
+        "('DUITAMA', '0700079010004', 'COL JESUS EUCARISTIA', 364, 0, None)"
+      ]
+    },
+    {
+      "name": "tarea_3_2 - Concentracion >60%",
+      "status": "OK",
+      "rows": 3181,
+      "sample": [
+        "(1, '0700001010005000001', 1, 'AUDITORIO GUSTAVO M CASTELLANOS COMFABOY', 'ZONA01', 'TUNJA', 'BOYACA', 'Pacto Histórico', '92', 'SOLO POR LA LISTA', '0', 'Senado', 59, 59, 100.0)",
+        "(1, '0700001010005000001', 1, 'AUDITORIO GUSTAVO M CASTELLANOS COMFABOY', 'ZONA01', 'TUNJA', 'BOYACA', 'Centro Democrático', '10', 'SOLO POR LA LISTA', '0', 'Senado', 39, 39, 100.0)",
+        "(1, '0700001010005000001', 1, 'AUDITORIO GUSTAVO M CASTELLANOS COMFABOY', 'ZONA01', 'TUNJA', 'BOYACA', 'Partido 40', '40', 'SOLO POR LA LISTA', '0', 'Senado', 2, 2, 100.0)"
+      ]
+    },
+    {
+      "name": "tarea_3_3 - Atribucion Determinística",
+      "status": "OK",
+      "rows": 5,
+      "sample": [
+        "('SOLO POR LA LISTA', 'Pacto Histórico', 9934.0)",
+        "('SOLO POR LA LISTA', 'Centro Democrático', 6109.0)",
+        "('JOHN EDICKSON AMAYA RODRIGUEZ', 'Alianza Verde', 2707.0)"
+      ]
+    }
+  ],
+  "visualizations": {
+    "scatter": {
+      "stdout": "r=0.846 | pendiente=0.874 | n_mesas=129",
+      "stderr": "",
+      "returncode": 0
+    },
+    "heatmap": {
+      "stdout": "Heatmap guardado en: C:\\Users\\CESAR\\Documents\\GitHub\\ramirez_prueba_utl_2026\\viz\\heatmap_municipios.png",
+      "stderr": "",
+      "returncode": 0
+    }
+  },
+  "errors": []
+}
