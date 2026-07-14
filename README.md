@@ -32,6 +32,8 @@ python outputs/generar_manifest.py
 
 El scraper descarga resultados por mesa y corporacion (`/json/ACT/{SE|CA}/{codigo_mesa}.json`) insertando en `carga_log` con `INSERT OR IGNORE`. El ETL migra a modelo normalizado (`resultados_votacion`, `mesa`, `puesto`, `zona`, `municipio`, `partido`, `candidato`, `corporacion`). Las consultas SQL en `sql/` responden a las tareas analíticas. Las visualizaciones y el dashboard se regeneran desde `export_data.py`.
 
+![Diagrama de arquitectura del pipeline](viz/pipeline_2026.png)
+
 ## API desde el código real
 
 Endpoint de resultados: `https://resultadospreccongreso2026.registraduria.gov.co/json/ACT/{SE|CA}/{codigo_mesa}.json`
