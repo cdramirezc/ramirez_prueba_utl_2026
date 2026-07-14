@@ -4,7 +4,7 @@
 
 | Campo | Valor |
 |-------|-------|
-| Nombre | CESAR RAMIREZ |
+| Nombre | CESAR DANIEL RAMIREZ CELY |
 | Email | cesar.rcely@gmail.com |
 | Repo | https://github.com/cdramirezc/ramirez_prueba_utl_2026 |
 | Fecha | 2026-07-13 |
